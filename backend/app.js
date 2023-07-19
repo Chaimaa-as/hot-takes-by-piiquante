@@ -68,14 +68,17 @@ app.use(
 app.use(limiter);
 app.use(xss());
 
+app.use(express.static(path.join(__dirname, "dist/frontend")));
 // GESTION DES ROUTES PRINCIPALES DE L'API : AUTH / SAUCES / IMG----------------------------------------------------------
 // Appeler les routes créées précédemment : userRoute et sauceRoute
 app.use("/api/auth", userRoute);
 app.use("/api/sauces", sauceRoute);
 
-app.use(express.static("hot-takes"));
+// app.use(express.static("hot-takes"));
 // -----------------------------------------------------------------------------------------------------------------------
-
+app.use("/", (req, res) => {
+  res.sendFile(path.join(__dirname + "/dist/frontend/index.html"));
+});
 // utiliser la méthode get() pour répondre uniquement aux demandes GET à cet endpoint ;
 app.get("/api/sauces/:id", (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
